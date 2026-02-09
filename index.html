@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentine's Celebration</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Pacifico&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --pink-bg: #ffe4e9;
+            --soft-white: #ffffff;
+            --text-grey: #4a4a4a;
+            --btn-green: #4dbb7e;
+            --btn-red: #e94d4d;
+        }
+
+        body {
+            background-color: var(--pink-bg);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Fredoka', sans-serif;
+            overflow: hidden;
+        }
+
+        /* Background Effects */
+        .heart-particle {
+            position: fixed;
+            top: -10vh;
+            user-select: none;
+            pointer-events: none;
+            z-index: 1;
+            animation: fall linear forwards;
+        }
+
+        .firework {
+            position: fixed;
+            pointer-events: none;
+            z-index: 2;
+            animation: explode 1s ease-out forwards;
+        }
+
+        @keyframes fall {
+            to { transform: translateY(110vh) rotate(360deg); }
+        }
+
+        @keyframes explode {
+            0% { transform: scale(0); opacity: 1; }
+            100% { transform: scale(2.5); opacity: 0; }
+        }
+
+        .card {
+            background: var(--soft-white);
+            width: 90%;
+            max-width: 450px;
+            padding: 40px 20px;
+            border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            position: relative;
+            z-index: 20;
+        }
+
+        /* Stickers */
+        .sticker { position: absolute; width: 65px; z-index: 21; pointer-events: none; }
+        .s1 { top: -30px; left: -20px; width: 90px; }
+        .s2 { top: -20px; right: -10px; width: 80px; }
+        .s3 { bottom: 20px; left: -30px; width: 100px; }
+        .s4 { bottom: -20px; right: -20px; width: 90px; }
+        .s5 { top: 120px; left: -40px; }
+        .s6 { top: 150px; right: -35px; }
+
+        .title { font-family: 'Pacifico', cursive; color: #ff6b81; font-size: 2.2rem; margin-bottom: 10px; }
+        .main-gif { width: 160px; margin: 0 auto; display: block; border-radius: 20px; }
+        
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-top: 25px;
+            min-height: 120px;
+        }
+
+        button {
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            color: white;
+            transition: 0.2s;
+        }
+
+        #btnYes { background-color: var(--btn-green); font-size: 1.2rem; }
+        #btnNo { background-color: var(--btn-red); font-size: 1.2rem; }
+        
+        .btn-back { 
+            background-color: #ffb6c1; 
+            margin-top: 20px; 
+            font-size: 0.9rem;
+            display: inline-block;
+        }
+
+        #screen2 { display: none; }
+        .photo-grid { display: flex; gap: 10px; justify-content: center; margin: 20px 0; }
+        .photo-box {
+            width: 140px; height: 180px; background: #fff; border-radius: 12px;
+            overflow: hidden; border: 3px solid white; cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 30;
+        }
+        .photo-box img { width: 100%; height: 100%; object-fit: cover; }
+
+        #popup {
+            display: none;
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            z-index: 200;
+            width: 85%;
+        }
+
+        .close-btn { color: #ff6b81; cursor: pointer; font-weight: bold; margin-top: 10px; display: block;}
+
+        #click-layer {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: 5;
+            display: none;
+        }
+    </style>
+</head>
+<body onclick="handleBodyClick()">
+
+    <div id="click-layer"></div>
+
+    <div class="card" id="screen1">
+        <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbjNsaWFhZ2QydXpmNG01bmZzMm5mN3VnMmtxY3h0MXVtZWtpeXNwYSZlcD12MV9zdGlja2Vyc19zZWFyY2gmY3Q9cw/CjrB9Mo0o4DNC/giphy.gif" class="sticker s1">
+        <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbjNsaWFhZ2QydXpmNG01bmZzMm5mN3VnMmtxY3h0MXVtZWtpeXNwYSZlcD12MV9zdGlja2Vyc19zZWFyY2gmY3Q9cw/016jMX4UhzUioJ6bxX/giphy.gif" class="sticker s2">
+        <img src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExZXdpZWpneXdqejV5dDUyN2c3cTRiYmxpcDRkZXAzcHAyYmIzNDRpNyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/fvN5KrNcKKUyX7hNIA/giphy.gif" class="sticker s3">
+        <img src="https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3NTdoaHNpYmYyMDFtNHJsODVla283MWFub3N3OGhlbHFkbXF5ZHNnMCZlcD12MV9zdGlja2Vyc19zZWFyY2gmY3Q9cw/ZwnSKQpccu7cRa3tIR/giphy.gif" class="sticker s4">
+        <img src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExMW10amE3dDl2eDYwMjN6ZmN6ejdibmdtYW43NG1iejRqcmNlOGpxbiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/ic1ZwwBJleuBi/giphy.gif" class="sticker s5">
+        <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExc3k3Y3B5NWl2dmR4YzkwM3o2Zmh3Y3BrcTdubDNoeDN3bXBicGlkdSZlcD12MV9zdGlja2Vyc19zZWFyY2gmY3Q9cw/KxDqcD2mAEuOFMMu1g/giphy.gif" class="sticker s6">
+
+        <h1 class="title">Hey Cutie!</h1>
+        <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbDQ4OWtuYjN6djNxcXZqaHJ1ejJrNGdoNm01djU0aml6ZGFwZzdtYyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/1JmGiBtqTuehfYxuy9/giphy.gif" class="main-gif">
+        <p class="question">Will you be my Valentine?</p>
+
+        <div class="btn-container">
+            <button id="btnYes" onclick="accept(event)">Yes</button>
+            <button id="btnNo" onclick="chase(event)">No</button>
+        </div>
+    </div>
+
+    <div class="card" id="screen2">
+        <h1 class="title">I Love You! 💕</h1>
+        <div class="photo-grid">
+            <div class="photo-box" onclick="openNote(event)"><img src="image.png" alt="Photo 1"></div>
+            <div class="photo-box" onclick="openCat(event)"><img src="image2.png" alt="Photo 2"></div>
+        </div>
+        <p style="font-size: 0.9rem; color: #ff6b81; position: relative; z-index: 31;">(Tap photos for a surprise!)</p>
+        
+        <button class="btn-back" onclick="goBack(event)">← Back</button>
+
+        <div id="popup">
+            <div id="popup-content"></div>
+            <span class="close-btn" onclick="closePopup()">Close</span>
+        </div>
+    </div>
+
+    <audio id="bgMusic" loop preload="auto">
+        <source src="Ginintuang Tanawin.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        let yesScale = 1;
+        const music = document.getElementById('bgMusic');
+        let celebrationStarted = false;
+
+        function createRainyHeart() {
+            const h = document.createElement('div');
+            h.classList.add('heart-particle');
+            h.innerHTML = ['❤️', '💖', '💗', '💕'][Math.floor(Math.random()*4)];
+            h.style.left = Math.random() * 100 + 'vw';
+            h.style.fontSize = Math.random() * 20 + 15 + 'px';
+            h.style.animationDuration = Math.random() * 3 + 2 + 's';
+            h.style.opacity = Math.random();
+            document.body.appendChild(h);
+            setTimeout(() => h.remove(), 5000);
+        }
+        setInterval(createRainyHeart, 300);
+
+        function createFirework() {
+            if(!celebrationStarted) return;
+            const f = document.createElement('div');
+            f.classList.add('firework');
+            f.innerHTML = '💝';
+            f.style.left = Math.random() * 100 + 'vw';
+            f.style.top = Math.random() * 100 + 'vh';
+            f.style.fontSize = '40px';
+            document.body.appendChild(f);
+            setTimeout(() => f.remove(), 1000);
+        }
+
+        function chase(e) {
+            e.stopPropagation();
+            yesScale += 0.5;
+            document.getElementById('btnYes').style.transform = `scale(${yesScale})`;
+            const no = document.getElementById('btnNo');
+            no.style.position = 'fixed';
+            no.style.left = Math.random() * (window.innerWidth - 100) + 'px';
+            no.style.top = Math.random() * (window.innerHeight - 50) + 'px';
+        }
+
+        function accept(e) {
+            if(e) e.stopPropagation();
+            document.getElementById('screen1').style.display = 'none';
+            document.getElementById('screen2').style.display = 'block';
+            document.getElementById('click-layer').style.display = 'block';
+            celebrationStarted = true;
+            setInterval(createFirework, 400);
+            
+            // Re-triggering play to ensure sound starts
+            music.play().catch(error => console.log("Audio play failed:", error));
+        }
+
+        function goBack(e) {
+            e.stopPropagation();
+            document.getElementById('screen1').style.display = 'block';
+            document.getElementById('screen2').style.display = 'none';
+            document.getElementById('click-layer').style.display = 'none';
+            celebrationStarted = false;
+            music.pause();
+        }
+
+        function handleBodyClick() {
+            if (celebrationStarted) {
+                if (music.paused) music.play();
+                else music.pause();
+            }
+        }
+
+        function openNote(e) {
+            e.stopPropagation();
+            const pop = document.getElementById('popup');
+            document.getElementById('popup-content').innerHTML = "<p><b>A Special Note:</b><br>Every line carries the pain of loving silently. It beautifully reflects the feeling of caring for someone who belongs to another heart.!🫶❤️</p>";
+            pop.style.display = 'block';
+        }
+
+        function openCat(e) {
+            e.stopPropagation();
+            const pop = document.getElementById('popup');
+            document.getElementById('popup-content').innerHTML = `<img src="https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3OGtpZDgzdnhuamJlYjB1c2h6OXhlemEzYWVkN3VuNzlycWx5ZHlwYiZlcD12MV9zdGlja2Vyc19zZWFyY2gmY3Q9cw/dLIqrLqRLpAnaWQnCh/giphy.gif" width="100%">`;
+            pop.style.display = 'block';
+        }
+
+        function closePopup() { 
+            document.getElementById('popup').style.display = 'none'; 
+        }
+    </script>
+</body>
+</html>
